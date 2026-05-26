@@ -1,0 +1,373 @@
+# CV Content — Chris Moffett
+# Edit this file to update the CV.
+# Run: python3 cv_build.py to regenerate the PDF.
+
+personal:
+  name: Chris Moffett
+  title: Curriculum Vitae
+  institution: Digital Futures Institute
+  department: Teachers College, Columbia University
+  address: "525 West 120th Street, Gottesman 501A"
+  city: "New York, NY 10027"
+  email: moffett@tc.columbia.edu
+  phone: "646.234.6223"
+
+education:
+  - year: "2012"
+    entry: 'Ph.D. Philosophy and Education, Teachers College, Columbia University, New York.<br><span class="cv-distinction">With Distinction</span>'
+  - year: "2009"
+    entry: "M.Phil. Philosophy and Education, Teachers College, Columbia University, New York"
+  - year: "2003"
+    entry: "M.A. Philosophy, DePaul University, Chicago"
+  - year: "1994"
+    entry: "B.A. Philosophy, Eckerd College, Saint Petersburg"
+
+positions:
+  - year: "2022–"
+    entry: "Research Scholar, Digital Futures Institute, Teachers College, Columbia University"
+  - year: "2021–22"
+    entry: "Lecturer, Foundations Program, College of Visual Arts and Design, University of North Texas"
+  - year: "2018–21"
+    entry: "Visiting Professor, Art Education and Art History, College of Visual Arts and Design, University of North Texas"
+
+graduate_teaching:
+  - institution: "Teachers College, Columbia University, New York, NY"
+    departments:
+      - name: "Art & Art Education"
+        courses:
+          - "AI-Lab for Educators (Winter 2024)"
+      - name: "Technology, Media & Learning"
+        courses:
+          - "The History of Communication (Fall 2025, Fall 2026)"
+          - "Technology & Culture (Fall 2026)"
+          - "Comparative Approaches to Technical Culture (Spring 2025, Spring 2026)"
+          - "Embodied Learning (Spring 2024)"
+          - "Media, Culture & Education (Fall 2022–Spring 2023)"
+      - name: "Cultural Studies Program"
+        courses:
+          - "Introduction to Cultural Studies: Imagining the City (Spring 2017)"
+          - "Aesthetics of Technology: Phenomenology of Objects (Spring 2015)"
+          - "Thinking through the Interface (Fall 2014)"
+      - name: "Department of Curriculum & Teaching"
+        courses:
+          - "Contemporary Theories of Animality (Spring 2017)"
+          - "Deleuze and Guattari: Diagram as Curriculum (Fall 2016)"
+      - name: "Department of Arts & Humanities"
+        courses:
+          - "Objects of Play: from Reggio Emilia, Italy to Anji, China (Summer 2015)"
+      - name: "Philosophy and Education Program"
+        courses:
+          - "Education and the Aesthetic Experience (Spring/Summer 2014)"
+          - "The Aesthetics of Air from the Stoics to Pragmatism (Fall 2014)"
+  - institution: "University of North Texas, Denton, TX"
+    departments:
+      - name: "Art Education and Art History, College of Visual Arts and Design"
+        courses:
+          - "Visual Culture: Theories & Pedagogy (Spring 2020)"
+          - "Art Lab School, co-designed (Summer 2019, Summer 2020)"
+          - "Critical Art Education (Fall 2018–Fall 2019)"
+  - institution: "Empire State College, SUNY, Queens, NY"
+    departments:
+      - name: "Harry Van Arsdale Jr. Center for Labor Studies"
+        courses:
+          - "Women's Studies (Spring 2012)"
+  - institution: "Pratt Institute, Brooklyn, NY"
+    departments:
+      - name: "Graduate Program in Art & Design Education"
+        courses:
+          - "American Urban Education: Issues and Contexts (Fall 2008)"
+          - "History and Philosophy of Education (Spring 2008)"
+  - institution: "College of Mount Saint Vincent, Bronx, NY"
+    departments:
+      - name: "Graduate Program in Urban & Multicultural Education"
+        courses:
+          - "Methods of Multicultural Education (Fall 2006–Fall 2008)"
+          - "Language, Cognitive Development and Cultural Diversity (Fall 2008)"
+          - "Urban Environmental Education (Summer 2004–Summer 2008)"
+          - "Foundations of Urban & Multicultural Education (Spring 2006–Spring 2007)"
+          - "Inclusion Strategies for Special Needs (Summer 2005)"
+
+undergraduate_teaching:
+  - institution: "University of North Texas, Denton, TX"
+    departments:
+      - name: "Foundations Program, College of Visual Arts and Design"
+        courses:
+          - "Core Capstone: Systems & Transformations, Faculty Lead (Fall 2021–Spring 2022)"
+      - name: "Art Education and Art History, College of Visual Arts and Design"
+        courses:
+          - "Constructing Visual Arts Practices (Fall 2018–Spring 2019)"
+          - "Visual Art Studies: Reflective Arts Practices (Fall 2018–Spring 2020)"
+          - "Visual Art Studies: Computer Art Applications (Fall 2019–Spring 2021)"
+          - "Honors Art Appreciation (Fall 2020–Spring 2021)"
+      - name: "Interdisciplinary Art and Design Studies"
+        courses:
+          - "Digital Tools (Fall 2020–Spring 2021)"
+  - institution: "John Jay College of Criminal Justice, New York, NY"
+    departments:
+      - name: "Interdisciplinary Studies Program"
+        courses:
+          - "Two Turntables and a Microphone: New Materialism and Sound (Summer 2018)"
+          - "Remembering and Forgetting: Afrofuturism and Afropessimism (Spring 2018)"
+          - "Technology of Habits (Fall 2017)"
+          - "Ecology & the Anthropocene (Spring 2017)"
+          - "Media Ecology (Spring 2017)"
+          - "Allegory, Code, Conspiracy (Fall 2016)"
+          - "Time Travel, Cyborgs and the City (Spring 2015)"
+          - "The City as Educator (Fall 2014)"
+          - "Networked Humanity: Between Connection and Isolation (Spring 2014)"
+          - "Revolutions: Scientific and Political; The Art of the Manifesto (Fall 2013)"
+          - "Measuring Justice (Fall 2012)"
+  - institution: "Barnard College, Columbia University, New York, NY"
+    departments:
+      - name: "Philosophy Program"
+        courses:
+          - "Philosophy of Education (Spring 2014)"
+  - institution: "College of Mount Saint Vincent, Bronx, NY"
+    departments:
+      - name: "Department of Philosophy"
+        courses:
+          - "Thought and Culture (Spring 2006)"
+          - "Business Ethics (Spring 2002–Fall 2004)"
+          - "Introduction to Philosophy (Fall 2000–Fall 2002)"
+  - institution: "Fordham University, Tarrytown, NY"
+    departments:
+      - name: "Department of Philosophy"
+        courses:
+          - "Business Ethics (Spring 2005)"
+          - "Current Moral Issues (Fall 2004)"
+
+publications:
+  journal_articles:
+    - content: 'Moffett, Chris. "The Catastrophic Gesture and the Art of Phenomenology." <em>Visual Arts Research.</em>'
+      year: "In review"
+    - content: 'Moffett, Chris. "Playing with Play: Some Genealogical Gestures Toward Playing Differently." <em>Journal of Philosophy of Education.</em>'
+      year: "Forthcoming"
+    - content: 'Moffett, Chris. "Playing with Fire: Rethinking Play and Technology Today." <em>The Journal of New Child Studies.</em>'
+      year: "Forthcoming"
+    - content: 'Moffett, Chris. "Gesture and Play in Art Education" [Published in Chinese as: <span class="cjk">艺术教育中的身体姿势与游戏精神</span>]. <em>Art Contemporary</em> [<span class="cjk">艺术当代</span>].'
+      year: "2026"
+    - content: 'Moffett, Chris, and Tam, E. "The Ambiguities of Play: Play, Risk, and Uncertainty in Practice." In <em>Teachers and Philosophy: Essays from a Contact Zone.</em> SUNY Press.'
+      year: "2025"
+    - content: 'Lewis, Tyson E., and Chris Moffett. "Educational Soundings: a Cryptogenealogy of Sounding Differently." <em>Postdigital Science and Education.</em>'
+      year: "2022"
+    - content: 'Moffett, Chris. "The Play of Art: Propensity and Pedagogy in Contemporary Chinese Early Childhood Education." <em>Studies in Art Education.</em>'
+      year: "2022"
+    - content: 'Moffett, Chris, and Tyson E. Lewis. "Notes on Notes on Notes." <em>Educational Philosophy and Theory.</em>'
+      year: "2022"
+    - content: 'Gibbons, A., Cabral, M., and Chris Moffett. "Inter-galactic pedagogy, pedagogy intergalactic." <em>Policy Futures in Education.</em>'
+      year: "2021"
+    - content: 'Moffett, Chris. "Walk Toward Something but Never Arrive." <em>Weird Art Assignments.</em>'
+      year: "2021"
+    - content: 'Holber, N., Yoon, H., Brownell, C., and Chris Moffett. "The Aesthetics of (Un)Charted Play." <em>International Society of the Learning Sciences.</em>'
+      year: "2020"
+    - content: 'Moffett, Chris. "The Sidewalk Chairs of Beijing." <em>Trends. 2020 Issue on Place-Conscious Art Education.</em>'
+      year: "2020"
+    - content: 'Templeton, Tran, and Chris Moffett. "Kid President: The Aesthetics of Childhood in Political Cartoons." <em>Jeunesse: Young People, Texts, Cultures</em> 11, no. 2.'
+      year: "2020"
+    - content: 'Moffett, Chris, and Helen Miller. "Feldenkrais and Drawing." <em>FeldenkraisZeit</em> 16.'
+      year: "2016"
+    - content: 'Moffett, Chris. "Sleight of Philosophy: Moving Between Wonder and Paranoia." In <em>Deception: Essays from the Outis Project on Deception,</em> edited by Paul Majkut, 199–217. Bucharest: Zeta Books.'
+      year: "2010"
+  conference_proceedings:
+    - content: 'Moffett, Chris. "<em>Studia</em> of the Present: the Recursive Art of Imagining the Places of Art Today." In <em>Conversations Across Cultures: Reimagining the Education of the Artist.</em>'
+      year: "Forthcoming"
+    - content: 'Lang, C., Moffett, C., and Vasudevan, L. "The Architecture of Academic Overproduction: Toward Post-AI Scholarship." In <em>Digital Humanism.</em> Springer Nature.'
+      year: "2026"
+    - content: 'Moffett, Chris. "Drawing Bodies: A Kinaesthetics of Attention." In <em>Thinking through Drawing: Practice into Knowledge,</em> edited by Andrea Kantrowitz et al., 135–139. New York: Teachers College.'
+      year: "2011"
+    - content: 'Moffett, Chris. "A Flower in the Grim City: Urban Environmental Education, Anti-Urban Philosophy, and Trips to the Field." In <em>Philosophy of Education 2006,</em> 130–37.'
+      year: "2006"
+  book_reviews:
+    - content: 'Moffett, Chris. Review of <em>Urban Underworlds: A Geography of Twentieth-Century American Literature & Culture. Teachers College Record,</em> April 13.'
+      year: "2011"
+
+fellowships:
+  - year: "2024"
+    entry: "Innovative Course Design, Office of the Provost's Teaching and Learning Grants, Columbia University"
+  - year: "2021"
+    entry: "Gestures of Teaching Project, Internal Seed Grant, University of North Texas"
+  - year: "2018"
+    entry: "PSC/CUNY Professional Development Fund, City University of New York"
+  - year: "2012"
+    entry: "Dissertation, Award of Distinction, Teachers College, Columbia University"
+  - year: "2010–11"
+    entry: "Digital Design Fellow, Arts & Humanities, Teachers College, Columbia University"
+  - year: "2008–09"
+    entry: "Policy and Research Fellowship, Teachers College, Columbia University"
+  - year: "2006"
+    entry: "Betty Fairfax Professional Development Fund Grant, Teachers College, Columbia University"
+  - year: "2005–06"
+    entry: "Weinberg Fellow, Teachers College, Columbia University"
+  - year: "1995–97"
+    entry: "Graduate Philosophy Fellow, DePaul University"
+
+invited_talks:
+  - content: "<em>Philosophy as Gesture: Returning to the Unfinished Body.</em> Colloquium Talk, Philosophy & Education, Teachers College, Columbia University."
+    year: "2026"
+  - content: "<em>The Ambiguity of Technology: Rigorous Pedagogy before Solutionism for Sustainable Learning.</em> Science, Technology & Innovation for a Sustainable Future Forum, United Nations Headquarters, New York."
+    year: "2026"
+  - content: "<em>The Earth is Neither Round nor Flat: Drifts and Drifting as Decolonial Practice.</em> Education as Experimentation 4 Symposium, University of North Texas."
+    year: "2025"
+  - content: "<em>Keynote: Three Gestures Toward Play: Art Education as Collective Practice.</em> InSEA Asian Congress, Sichuan Fine Arts Institute, Chongqing, China."
+    year: "2024"
+  - content: "<em>Philosophical Implications of Gestural Study: The Playful Gesture Has No Form.</em> International Conference on Creative Art Therapy, Hangzhou Normal University College of Fine Arts, China."
+    year: "2024"
+  - content: "<em>New Measures & Metrics in Education.</em> SoLAR Learning Analytics Summer Institute (LASI), University of Texas Arlington."
+    year: "2024"
+  - content: "<em>Seeing the Future: The Impossible Art of Looking at a Digital Object.</em> A/r/tography Asian Symposium, Guangzhou Academy of Fine Arts."
+    year: "2023"
+  - content: "<em>Toward an Art: Some Paradoxes Around AI and the Digital for Art Education.</em> iStart Education Forum, A4 Art Museum, Chengdu, China."
+    year: "2023"
+  - content: "<em>Studia of the Present: The Recursive Art of Imagining the Places of Art Today.</em> Conversations Across Cultures Symposium, Teachers College and Maryland Institute College of Art."
+    year: "2022"
+  - content: "<em>Biopolitics of Attention.</em> Bok Center, Harvard University, Cambridge, MA."
+    year: "2017"
+  - content: "<em>Teacher's Risk in Child Directed Play.</em> Zhejiang International Conference on AnjiPlay, Anji County, China."
+    year: "2015"
+  - content: "<em>Tall Tales of Walking Under Paris from End to End: Underground Narratives and Spatial Journeys.</em> French Studies Graduate Program, Massachusetts Institute of Technology."
+    year: "2013"
+
+conference_presentations:
+  - content: "<em>Puppet Pedagogy: An Inquiry into Animated Educational Objects.</em> American Educational Research Association (AERA), Los Angeles, CA."
+    year: "2026"
+  - content: "<em>Breaking the White Cube: Reimagining Education Through Participatory Exhibition.</em> AERA Annual Meeting, Los Angeles, CA."
+    year: "2026"
+  - content: "<em>Play Paradox: What Early Childhood Education Might Teach Us About The Unthinkable.</em> Philosophy of Education Society, Pittsburgh, PA."
+    year: "2026"
+  - content: "<em>Diagram & Practice: Toward a Pedagogy of the Gesture that Leaves a Trace.</em> Philosophy of Education Society, Pittsburgh, PA."
+    year: "2026"
+  - content: "<em>The Architecture of Academic Overproduction: Toward Post-AI Scholarship.</em> DIGHUMRES 2025, Vienna, Austria."
+    year: "2025"
+  - content: "<em>The Diagram as Thought in Motion: Experimentation in Art Foundations.</em> AERA Annual Meeting, Denver, CO."
+    year: "2025"
+  - content: "<em>Puppet Pedagogy: Learning with and through Animated Objects.</em> Philosophy of Education Society, Baltimore, MD."
+    year: "2025"
+  - content: "<em>Playing with Fire: Rethinking Play and Technology in Education.</em> North American Association for Philosophy & Education, Mundelein, Illinois."
+    year: "2024"
+  - content: "<em>The Puppeting of Pedagogy.</em> Art Education Research Institute (AERI), Cambridge University."
+    year: "2024"
+  - content: "<em>Reading Gestures: Embodied Experimentation in Virtual Study.</em> Philosophy of Education Society, Salt Lake City, Utah."
+    year: "2024"
+  - content: "<em>Streaming, Superposition, and Event: A Minor Art of Technical Gestures.</em> Art Education Research Institute (AERI), University of Arizona, Tucson."
+    year: "2023"
+  - content: "<em>Some Possible Gestures of Shearing and Collapse: A Precarious Ecology of Gesture Drawing.</em> InSEA World Congress, Çanakkale, Turkey."
+    year: "2023"
+  - content: "<em>Crisis upon Crisis: Recursion and Proliferation as Cosmotechnic Event.</em> Philosophy of Education Society, Chicago, Illinois."
+    year: "2023"
+  - content: "<em>Studia of the Present.</em> Conversations Across Cultures (CAC), New York."
+    year: "2022"
+  - content: "<em>Diagram as Practice: Visual Gestures as Endogenous Learning.</em> Art Education Research Institute (AERI), University of Georgia, Athens."
+    year: "2022"
+  - content: "<em>Constant Contact: Thinking Education Post-Frontier.</em> Philosophy of Education Society, San Jose, California."
+    year: "2022"
+  - content: '<em>How to (Keep) Drawing a Circle: Recursive Practice in the Age of "Next."</em> National Art Education Association (NAEA), New York.'
+    year: "2022"
+  - content: "<em>Spinal Visions: Interoceptive Pedagogy as Somaesthetic Practice.</em> Art Education Research Institute (AERI), Teachers College, Columbia University."
+    year: "2021"
+  - content: "<em>The Streets Beneath the Street: Urban Descent as Somaesthetic Practice.</em> Somaesthetics Conference, Florida Atlantic University, Boca Raton, FL."
+    year: "2017"
+  - content: "<em>Drawing Bodies: A Kinaesthetics of Attention.</em> Thinking through Drawing: Practice Into Knowledge, International Symposium, Teachers College."
+    year: "2011"
+  - content: "<em>A Flower in the Grim City.</em> Philosophy of Education Society, Puerto Vallarta, Mexico."
+    year: "2006"
+  - content: "<em>Sleight of Philosophy: Moving Between Wonder and Paranoia.</em> Outis: Phenomenology and Deception Conference, Universidad del Salvador, Buenos Aires, Argentina."
+    year: "2002"
+
+art_shows:
+  - content: "<em>Rethreaded.</em> Screening Scholarship Media Festival (SSMF), University of Pennsylvania. Co-facilitator."
+    year: "2026"
+  - content: "<em>Puppets.</em> Gallery Show and Symposium, Digital Futures Institute, Teachers College, Columbia University. Co-Curator."
+    year: "2024"
+  - content: "<em>Sandbox.</em> Gallery Exhibit, Digital Futures Institute, Teachers College, Columbia University. Co-Curator."
+    year: "2024"
+  - content: "<em>Gestures.</em> Gallery Show, Digital Futures Institute, Teachers College, Columbia University. Co-Curator."
+    year: "2023"
+  - content: "<em>Modes.</em> Gallery Show, Digital Futures Institute, Teachers College, Columbia University. Co-Curator."
+    year: "2023"
+  - content: "<em>Quality of Gesture.</em> Valentin de Boulogne: Beyond Caravaggio Exhibit Workshop, The Metropolitan Museum of Art, New York, NY."
+    year: "2016"
+  - content: "<em>Drawing Architecture: Feeling and Form.</em> Graduate School of Design, Harvard University, Cambridge, MA."
+    year: "2015"
+  - content: "<em>Relational Drawing.</em> The Whitney Museum of American Art, New York, NY."
+    year: "2011"
+  - content: "<em>Da Vinci&#x2019;s &#x201C;Vitruvian Man&#x201D; and the Modern Body.</em> The Feldenkrais Institute, New York, NY."
+    year: "2009"
+
+professional_experience:
+  - year: "2008–"
+    entry: "Co-Founder, Aesthetic Relational Exercises (aestheticrelationalexercises.com)"
+  - year: "2011–16"
+    entry: "Editor & Digital Humanities Strategist, <em>Cultural Formations,</em> Columbia University Program in Cultural Studies"
+  - year: "2010–14"
+    entry: "Contributing Editor, <em>Ecogradients,</em> Teachers College, Columbia University"
+  - year: "2003–11"
+    entry: "Feldenkrais Practitioner of Movement Education, Infants and Children, The Field Center for Children's Integrated Development, New York, NY"
+
+service:
+  - year: "2024"
+    entry: "Co-Mentor, Early Career Researcher Mentorship Event, University College London"
+  - year: "2012–23"
+    entry: "Advisory Committee, Anji Play, Anji, China (anjiplay.com)"
+  - year: "2022"
+    entry: "Search Committee Member, Art Education, University of North Texas"
+  - year: "2018–20"
+    entry: "Co-Advisor, National Art Education Student Chapter, University of North Texas"
+  - year: "2017"
+    entry: "Decolonizing the Canon, Working Group, Teachers College, Columbia University"
+  - year: "2013–14"
+    entry: "Media Curator, Film & Education Research Academy (FERA), Teachers College, Columbia University"
+
+student_advising:
+  doctoral:
+    art_education:
+      - name: "Anastasiya Chybireva Fender, University of North Texas. Committee member. (Proposal defended.)"
+        title: null
+      - name: "Nathaniel E. Garcia, Teachers College. Committee member. Defended 2026."
+        title: "Developmental Dynamics: How Independent Art Spaces Support Artistic Trajectories in Adult Artists."
+      - name: "Aimee Ehrman, Teachers College. Committee member. Defended 2025."
+        title: "Process and Processing: Navigating the Experience of Trauma: An Arts-Based Autoethnography."
+      - name: "Xu Li, University of North Texas. Committee member. Defended 2025."
+        title: "The Hyper-Dialectic Body in Merleau-Ponty's Phenomenology."
+      - name: "Kate Wurtzel, University of North Texas. Committee member. Defended 2021."
+        title: "What Does the Color Yellow Mean?: An Arts Based, Post-Intentional, Apprenticeship to Signs."
+      - name: "Marie-Claire Valdez, University of North Texas. Committee member. Defended 2021."
+        title: "Experiences of Playing to Learn: The Phenomenology of Games in College Level Art Appreciation."
+    technology_media_learning:
+      - name: "Shell Avenant, Teachers College. Committee member. (Proposal defended.)"
+        title: null
+      - name: "Xingyuan Meng, Teachers College. Committee member. Defended 2024."
+        title: "Breaking Barriers with Laughter: Stand-up Comedy and Feminist Online Expression in Contemporary China."
+  thesis:
+    - name: "Nasimeh Easton, Teachers College. IP Advisor. Defended 2026."
+      title: "Somartica: A Pathway to Wellbeing."
+    - name: "Stephanie Molla, University of North Texas. Committee member. Defended 2019."
+      title: "Confessions of a Sick Kid."
+    - name: "Shoshana McIntosh, University of North Texas. Committee member. Defended 2019."
+      title: "Biopedagogy of Rumination and Regurgitation."
+
+languages:
+  - "Mandarin Chinese, Intermediate"
+  - "Ancient Greek, Reading & Translation with Lexicon"
+
+memberships:
+  - "Philosophy of Education Society (PES)"
+  - "North American Association for Philosophy & Education (NAAPE)"
+  - "International Society for Education through Art (InSEA)"
+  - "American Educational Research Association (AERA)"
+
+references:
+  - name: "Megan Laverty"
+    title: "Associate Professor of Philosophy and Education, Teachers College, Columbia University"
+    contact: "laverty@tc.columbia.edu · 212.678.3393"
+  - name: "Tyson E. Lewis"
+    title: "Professor, Art Education, College of Visual Arts & Design, University of North Texas"
+    contact: "tyson.lewis@unt.edu · 940.369.7559"
+  - name: "John Baldacchino"
+    title: "Director of the Arts Institute & Professor of Arts Education, University of Wisconsin-Madison"
+    contact: "baldancchino@wisc.edu · 608.890.3314"
+  - name: "Judith Burton"
+    title: "Macy Professor of Education, Teachers College, Columbia University"
+    contact: "burton@tc.columbia.edu · 212.678.3362"
+  - name: "Sean Justice"
+    title: "Assistant Professor, School of Art and Design, Texas State University"
+    contact: "sbj19@txstate.edu · 512.245.0383"

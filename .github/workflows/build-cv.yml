@@ -1,0 +1,114 @@
+name: Build CV
+
+on:
+  workflow_dispatch:  # manual trigger via GitHub UI or trigger URL
+  push:
+    paths:
+      - 'cv_content.yaml'  # also auto-triggers on direct pushes to YAML
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q \
+            fonts-noto-cjk-extra \
+            libpango-1.0-0 \
+            libpangocairo-1.0-0 \
+            libcairo2 \
+            libgdk-pixbuf2.0-0
+
+      - name: Install Python dependencies
+        run: pip install weasyprint pyyaml
+
+      - name: Download cv_content.yaml from Google Drive
+        env:
+          GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+          GDRIVE_YAML_FILE_ID: ${{ secrets.GDRIVE_YAML_FILE_ID }}
+        run: |
+          pip install google-auth google-api-python-client
+          python3 - << 'EOF'
+          import os, json
+          from google.oauth2 import service_account
+          from googleapiclient.discovery import build
+          from googleapiclient.http import MediaIoBaseDownload
+          import io
+
+          creds_json = json.loads(os.environ['GDRIVE_SERVICE_ACCOUNT_JSON'])
+          creds = service_account.Credentials.from_service_account_info(
+              creds_json, scopes=['https://www.googleapis.com/auth/drive'])
+          service = build('drive', 'v3', credentials=creds)
+
+          file_id = os.environ['GDRIVE_YAML_FILE_ID']
+          request = service.files().get_media(fileId=file_id)
+          buf = io.BytesIO()
+          downloader = MediaIoBaseDownload(buf, request)
+          done = False
+          while not done:
+              _, done = downloader.next_chunk()
+          with open('cv_content.yaml', 'wb') as f:
+              f.write(buf.getvalue())
+          print("Downloaded cv_content.yaml from Drive")
+          EOF
+
+      - name: Build PDF
+        run: python3 cv_build.py --output CV_Moffett.pdf
+
+      - name: Build HTML
+        run: python3 cv_build_html.py --output CV_Moffett.html
+
+      - name: Upload PDF and HTML to Google Drive
+        env:
+          GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+          GDRIVE_CV_FOLDER_ID: ${{ secrets.GDRIVE_CV_FOLDER_ID }}
+        run: |
+          python3 - << 'EOF'
+          import os, json
+          from google.oauth2 import service_account
+          from googleapiclient.discovery import build
+          from googleapiclient.http import MediaFileUpload
+
+          creds_json = json.loads(os.environ['GDRIVE_SERVICE_ACCOUNT_JSON'])
+          creds = service_account.Credentials.from_service_account_info(
+              creds_json, scopes=['https://www.googleapis.com/auth/drive'])
+          service = build('drive', 'v3', credentials=creds)
+          folder_id = os.environ['GDRIVE_CV_FOLDER_ID']
+
+          for filename, mime in [
+              ('CV_Moffett.pdf', 'application/pdf'),
+              ('CV_Moffett.html', 'text/html'),
+          ]:
+              # Check if file already exists in folder
+              results = service.files().list(
+                  q=f"name='{filename}' and '{folder_id}' in parents and trashed=false",
+                  fields='files(id)').execute()
+              files = results.get('files', [])
+              media = MediaFileUpload(filename, mimetype=mime)
+              if files:
+                  service.files().update(fileId=files[0]['id'], media_body=media).execute()
+                  print(f"Updated {filename} in Drive")
+              else:
+                  service.files().create(
+                      body={'name': filename, 'parents': [folder_id]},
+                      media_body=media).execute()
+                  print(f"Created {filename} in Drive")
+          EOF
+
+      - name: Commit built files to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CV_Moffett.pdf CV_Moffett.html index.html cv_content.yaml
+          git diff --staged --quiet || git commit -m "Build CV [$(date +'%Y-%m-%d')]"
+          git push
