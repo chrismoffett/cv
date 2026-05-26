@@ -129,6 +129,24 @@ body {
 .cv-ref p { margin: 0; }
 .cv-ref-name { font-weight: 600; }
 .cv-distinction { font-style: italic; display: block; line-height: 1.42; }
+.cv-pdf-button {
+    display: block;
+    margin: 0 0 28pt;
+    text-align: right;
+}
+.cv-pdf-button a {
+    display: inline-block;
+    font-family: 'EB', serif;
+    font-size: 8pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #888;
+    border: 0.5pt solid #888;
+    padding: 4pt 10pt;
+    text-decoration: none;
+}
+.cv-pdf-button a:hover { color: #1a1a1a; border-color: #1a1a1a; }
+@media print { .cv-pdf-button { display: none; } }
 """
 
 # ── HTML helpers ────────────────────────────────────────────────────────
@@ -177,6 +195,7 @@ body = f"""
         <p>{p['phone']}</p>
     </div>
 </div>
+<div class="cv-pdf-button"><a href="CV_Moffett.pdf" download>Download PDF</a></div>
 
 <p class="cv-section-head">Education</p>
 {''.join(entry(e['year'], e['entry']) for e in cv['education'])}
@@ -232,7 +251,7 @@ body = f"""
 {''.join(f'<p class="cv-list-item">{m}</p>' for m in cv['memberships'])}
 
 <p class="cv-section-head">References</p>
-{''.join(f"""<div class="cv-ref"><p class="cv-ref-name">{r['name']}</p><p>{r['title']}</p><p>{r['contact']}</p></div>""" for r in cv['references'])}
+<p class="cv-list-item">Available on request.</p>
 """
 
 full_html = f"""<!DOCTYPE html>
