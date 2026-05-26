@@ -2,6 +2,9 @@
 .env
 get_refresh_token.py
 
+# Full CV with references — Drive only, never commit
+CV_Moffett.pdf
+
 # Python
 __pycache__/
 *.pyc
