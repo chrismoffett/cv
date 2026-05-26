@@ -15,13 +15,13 @@ personal:
 
 education:
   - year: "2012"
-    entry: "Ph.D. Philosophy and Education, Teachers College, Columbia University, New York. <em>With Distinction</em>"
+    entry: "Ph.D. Philosophy and Education, Teachers College, Columbia University <br><span class=\"cv-distinction\">With Distinction</span>"
   - year: "2009"
-    entry: "M.Phil. Philosophy and Education, Teachers College, Columbia University, New York"
+    entry: "M.Phil. Philosophy and Education, Teachers College, Columbia University"
   - year: "2003"
-    entry: "M.A. Philosophy, DePaul University, Chicago"
+    entry: "M.A. Philosophy, DePaul University"
   - year: "1994"
-    entry: "B.A. Philosophy, Eckerd College, Saint Petersburg"
+    entry: "B.A. Philosophy, Eckerd College"
 
 positions:
   - year: "2022–"
