@@ -1,3 +1,4 @@
+
 # CV Content — Chris Moffett
 # Edit this file to update the CV.
 # Run: python3 cv_build.py to regenerate the PDF.
@@ -14,7 +15,7 @@ personal:
 
 education:
   - year: "2012"
-    entry: 'Ph.D. Philosophy and Education, Teachers College, Columbia University, New York.<br><span class="cv-distinction">With Distinction</span>'
+    entry: "Ph.D. Philosophy and Education, Teachers College, Columbia University, New York. <em>With Distinction</em>"
   - year: "2009"
     entry: "M.Phil. Philosophy and Education, Teachers College, Columbia University, New York"
   - year: "2003"
@@ -260,7 +261,7 @@ conference_presentations:
     year: "2022"
   - content: "<em>Constant Contact: Thinking Education Post-Frontier.</em> Philosophy of Education Society, San Jose, California."
     year: "2022"
-  - content: '<em>How to (Keep) Drawing a Circle: Recursive Practice in the Age of "Next."</em> National Art Education Association (NAEA), New York.'
+  - content: "<em>How to (Keep) Drawing a Circle: Recursive Practice in the Age of Next.</em> National Art Education Association (NAEA), New York."
     year: "2022"
   - content: "<em>Spinal Visions: Interoceptive Pedagogy as Somaesthetic Practice.</em> Art Education Research Institute (AERI), Teachers College, Columbia University."
     year: "2021"
@@ -290,7 +291,7 @@ art_shows:
     year: "2015"
   - content: "<em>Relational Drawing.</em> The Whitney Museum of American Art, New York, NY."
     year: "2011"
-  - content: "<em>Da Vinci&#x2019;s &#x201C;Vitruvian Man&#x201D; and the Modern Body.</em> The Feldenkrais Institute, New York, NY."
+  - content: "<em>Da Vinci's Vitruvian Man and the Modern Body.</em> The Feldenkrais Institute, New York, NY."
     year: "2009"
 
 professional_experience:
