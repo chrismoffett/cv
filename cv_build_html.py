@@ -195,7 +195,7 @@ body = f"""
         <p>{p['phone']}</p>
     </div>
 </div>
-<div class="cv-pdf-button"><a href="CV_Moffett.pdf" download>Download PDF</a></div>
+<div class="cv-pdf-button"><a href="CV_Moffett_public.pdf" download>Download PDF</a></div>
 
 <p class="cv-section-head">Education</p>
 {''.join(entry(e['year'], e['entry']) for e in cv['education'])}

@@ -72,7 +72,9 @@ jobs:
           PYEOF
 
       - name: Build PDF
-        run: python3 cv_build.py --output CV_Moffett.pdf
+        run: |
+          python3 cv_build.py --output CV_Moffett_public.pdf
+          python3 cv_build.py --full --output CV_Moffett.pdf
 
       - name: Build HTML
         run: python3 cv_build_html.py --output CV_Moffett.html
@@ -102,6 +104,7 @@ jobs:
 
           for filename, mime in [
               ('CV_Moffett.pdf', 'application/pdf'),
+              ('CV_Moffett_public.pdf', 'application/pdf'),
               ('CV_Moffett.html', 'text/html'),
           ]:
               results = service.files().list(
@@ -123,6 +126,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add CV_Moffett.pdf CV_Moffett.html index.html cv_content.yaml
+          git add CV_Moffett_public.pdf CV_Moffett.html index.html cv_content.yaml
           git diff --staged --quiet || git commit -m "Build CV [$(date +'%Y-%m-%d')]"
           git push

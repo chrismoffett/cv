@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
 """
 CV Build Script — Chris Moffett
-Usage: python3 cv_build.py [--output path/to/output.pdf]
+Usage: python3 cv_build.py [--full] [--output path/to/output.pdf]
 
 Reads cv_content.yaml and renders to PDF using WeasyPrint.
 Fonts are loaded from fonts_ttf/ directory (EB Garamond, Cormorant Garamond).
 Noto Serif CJK SC is loaded from system for Chinese characters.
 
+Flags:
+  --full     Render references in full. Default output: CV_Moffett.pdf
+  (default)  Replace references with "Available on request."
+             Default output: CV_Moffett_public.pdf
+  --output   Override the output path.
+
 To update the CV:
   1. Edit cv_content.yaml
-  2. Run: python3 cv_build.py
-  3. Output: CV_Moffett.pdf
+  2. Run: python3 cv_build.py            # builds public PDF (no refs)
+     or:  python3 cv_build.py --full     # builds full PDF (with refs)
 """
 
 import yaml
@@ -21,7 +27,11 @@ from weasyprint import HTML
 # ── Paths ──────────────────────────────────────────────────────────────
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 YAML_PATH  = os.path.join(SCRIPT_DIR, 'cv_content.yaml')
-OUTPUT_PATH = os.path.join(SCRIPT_DIR, 'CV_Moffett.pdf')
+FULL = '--full' in sys.argv
+OUTPUT_PATH = os.path.join(
+    SCRIPT_DIR,
+    'CV_Moffett.pdf' if FULL else 'CV_Moffett_public.pdf',
+)
 FONTS_DIR  = f'file://{SCRIPT_DIR}/fonts_ttf'
 # CJK font — try common locations across Linux and macOS
 def _find_cjk_font():
@@ -46,6 +56,19 @@ if '--output' in sys.argv:
 # ── Load content ────────────────────────────────────────────────────────
 with open(YAML_PATH, 'r', encoding='utf-8') as f:
     cv = yaml.safe_load(f)
+
+# ── References block: full vs. public ───────────────────────────────────
+if FULL:
+    references_html = ''.join(
+        f'<div class="cv-ref">'
+        f'<p class="cv-ref-name">{r["name"]}</p>'
+        f'<p>{r["title"]}</p>'
+        f'<p>{r["contact"]}</p>'
+        f'</div>'
+        for r in cv['references']
+    )
+else:
+    references_html = '<p class="cv-list-item">Available on request.</p>'
 
 # ── CSS ─────────────────────────────────────────────────────────────────
 F = FONTS_DIR
@@ -254,7 +277,7 @@ body = f"""
 {''.join(f'<p class="cv-list-item">{m}</p>' for m in cv['memberships'])}
 
 <p class="cv-section-head">References</p>
-{''.join(f"""<div class="cv-ref"><p class="cv-ref-name">{r['name']}</p><p>{r['title']}</p><p>{r['contact']}</p></div>""" for r in cv['references'])}
+{references_html}
 """
 
 full_html = f"""<!DOCTYPE html>
