@@ -1,10 +1,10 @@
 name: Build CV
 
 on:
-  workflow_dispatch:  # manual trigger via GitHub UI or trigger URL
+  workflow_dispatch:
   push:
     paths:
-      - 'cv_content.yaml'  # also auto-triggers on direct pushes to YAML
+      - 'cv_content.yaml'
 
 jobs:
   build:
@@ -34,20 +34,26 @@ jobs:
 
       - name: Download cv_content.yaml from Google Drive
         env:
-          GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+          GDRIVE_REFRESH_TOKEN: ${{ secrets.GDRIVE_REFRESH_TOKEN }}
+          GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
+          GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
           GDRIVE_YAML_FILE_ID: ${{ secrets.GDRIVE_YAML_FILE_ID }}
         run: |
-          pip install google-auth google-api-python-client
-          python3 - << 'EOF'
-          import os, json
-          from google.oauth2 import service_account
+          pip install google-auth google-auth-oauthlib google-api-python-client
+          python3 - << 'PYEOF'
+          import os
+          from google.oauth2.credentials import Credentials
           from googleapiclient.discovery import build
           from googleapiclient.http import MediaIoBaseDownload
           import io
 
-          creds_json = json.loads(os.environ['GDRIVE_SERVICE_ACCOUNT_JSON'])
-          creds = service_account.Credentials.from_service_account_info(
-              creds_json, scopes=['https://www.googleapis.com/auth/drive'])
+          creds = Credentials(
+              token=None,
+              refresh_token=os.environ['GDRIVE_REFRESH_TOKEN'],
+              token_uri='https://oauth2.googleapis.com/token',
+              client_id=os.environ['GDRIVE_CLIENT_ID'],
+              client_secret=os.environ['GDRIVE_CLIENT_SECRET']
+          )
           service = build('drive', 'v3', credentials=creds)
 
           file_id = os.environ['GDRIVE_YAML_FILE_ID']
@@ -60,7 +66,7 @@ jobs:
           with open('cv_content.yaml', 'wb') as f:
               f.write(buf.getvalue())
           print("Downloaded cv_content.yaml from Drive")
-          EOF
+          PYEOF
 
       - name: Build PDF
         run: python3 cv_build.py --output CV_Moffett.pdf
@@ -70,18 +76,24 @@ jobs:
 
       - name: Upload PDF and HTML to Google Drive
         env:
-          GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+          GDRIVE_REFRESH_TOKEN: ${{ secrets.GDRIVE_REFRESH_TOKEN }}
+          GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
+          GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
           GDRIVE_CV_FOLDER_ID: ${{ secrets.GDRIVE_CV_FOLDER_ID }}
         run: |
-          python3 - << 'EOF'
-          import os, json
-          from google.oauth2 import service_account
+          python3 - << 'PYEOF'
+          import os
+          from google.oauth2.credentials import Credentials
           from googleapiclient.discovery import build
           from googleapiclient.http import MediaFileUpload
 
-          creds_json = json.loads(os.environ['GDRIVE_SERVICE_ACCOUNT_JSON'])
-          creds = service_account.Credentials.from_service_account_info(
-              creds_json, scopes=['https://www.googleapis.com/auth/drive'])
+          creds = Credentials(
+              token=None,
+              refresh_token=os.environ['GDRIVE_REFRESH_TOKEN'],
+              token_uri='https://oauth2.googleapis.com/token',
+              client_id=os.environ['GDRIVE_CLIENT_ID'],
+              client_secret=os.environ['GDRIVE_CLIENT_SECRET']
+          )
           service = build('drive', 'v3', credentials=creds)
           folder_id = os.environ['GDRIVE_CV_FOLDER_ID']
 
@@ -89,7 +101,6 @@ jobs:
               ('CV_Moffett.pdf', 'application/pdf'),
               ('CV_Moffett.html', 'text/html'),
           ]:
-              # Check if file already exists in folder
               results = service.files().list(
                   q=f"name='{filename}' and '{folder_id}' in parents and trashed=false",
                   fields='files(id)').execute()
@@ -103,7 +114,7 @@ jobs:
                       body={'name': filename, 'parents': [folder_id]},
                       media_body=media).execute()
                   print(f"Created {filename} in Drive")
-          EOF
+          PYEOF
 
       - name: Commit built files to repo
         run: |
