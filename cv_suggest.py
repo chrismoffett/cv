@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 """
-cv_suggest.py — Scan Gmail, Drive, Notion, and Obsidian for CV-worthy
-activity since the last commit on `main` of chrismoffett/cv, and prepend
-a dated block of paste-ready YAML suggestions to CV_Suggestions.md in
-the Drive CV folder.
+cv_suggest.py — Scan Gmail, Drive, and Notion for CV-worthy activity since
+the last commit that changed cv_content.yaml (read from local git), filter it
+through cv_filter, and prepend a dated block of paste-ready YAML suggestions to
+CV_Suggestions.md in the Drive CV folder.
 
-Usage:  python3 cv_suggest.py
+Usage:  python3 cv_suggest.py   (run from inside the cloned repo)
 
 Dependencies (install once):
-    pip install python-dotenv google-auth google-api-python-client requests
+    pip install -r requirements.txt
 
 Required env vars (in .env in the same directory as this script):
     GDRIVE_CLIENT_ID
     GDRIVE_CLIENT_SECRET
     GDRIVE_REFRESH_TOKEN     (must include `drive` AND `gmail.readonly` scopes)
     NOTION_API_KEY
-    GITHUB_TOKEN             (listed per spec; this script uses `gh` CLI auth)
+    ANTHROPIC_API_KEY        (used by cv_filter for classification)
 
 Optional:
-    NOTION_PROJECTS_DB_ID    (override search for a database titled "Projects")
+    NOTION_PROJECTS_DB_ID    (override the committed Initiatives database id)
 """
 
 import io
@@ -34,11 +34,13 @@ try:
     from googleapiclient.discovery import build
     from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
     import requests
+    import cv_filter  # local sibling module; pulls in anthropic + pyyaml
 except ImportError as e:
     sys.exit(
         f"Missing dependency: {e.name}.\n"
-        "Install with: pip install python-dotenv google-auth "
-        "google-api-python-client requests"
+        "Install with: pip install -r requirements.txt\n"
+        "(python-dotenv google-auth google-api-python-client requests "
+        "anthropic pyyaml)"
     )
 
 # ── Config ──────────────────────────────────────────────────────────────
@@ -47,13 +49,14 @@ load_dotenv(SCRIPT_DIR / ".env")
 
 ACADEMIC_FOLDER_ID = "1dDLCTYK4n_KqxPKi80cNOa-OvKHSBkV3"
 CV_FOLDER_ID = "1H2lg3z_HiPcSeS-gIlYV5GS24AedQ476"
-OBSIDIAN_PATH = (
-    "/Users/cm2189/My Drive (chris@chrismoffett.com)"
-    "/Second Brain/04 Vault/Knowledge_Vault/writing/academic"
-)
-GH_REPO = "chrismoffett/cv"
-GH_BRANCH = "main"
 SUGGESTIONS_FILENAME = "CV_Suggestions.md"
+CV_CONTENT_FILE = "cv_content.yaml"
+# The "Initiatives" database — academic projects live here under Area = Academic.
+# This is the queryable database id from its Notion URL, not the data-source /
+# collection id (which the classic 2022-06-28 query endpoint rejects with a 404).
+# It is a structural id, not a secret — access still requires NOTION_API_KEY — so
+# committing it as the default lets a fresh checkout work with no local config.
+NOTION_INITIATIVES_DB_ID = "2e65bf58f9f9805ca45ffcea23ba7198"
 
 GMAIL_SCOPE = "https://www.googleapis.com/auth/gmail.readonly"
 DRIVE_SCOPE = "https://www.googleapis.com/auth/drive"
@@ -66,14 +69,21 @@ def require_env(*names):
 
 
 def get_cutoff_date():
-    """Date of the last commit on main, via `gh api`."""
-    result = subprocess.run(
-        ["gh", "api", f"repos/{GH_REPO}/commits/{GH_BRANCH}",
-         "--jq", ".commit.committer.date"],
-        capture_output=True, text=True, check=True,
-    )
-    iso = result.stdout.strip()
-    return datetime.fromisoformat(iso.replace("Z", "+00:00"))
+    """Timestamp of the last commit that changed the CV content (cv_content.yaml),
+    read from local git history. Keying the scan window off the content file means
+    routine code commits — e.g. editing cv_filter.py — don't advance the cutoff and
+    silently blank out the next run. Reading it from local `git` rather than the
+    GitHub API means the tool needs only git: no `gh` CLI, no auth, no network.
+    Falls back to the latest commit if the content file has no history yet."""
+    def _git_date(scope):
+        result = subprocess.run(
+            ["git", "-C", str(SCRIPT_DIR), "log", "-1", "--format=%cI", *scope],
+            capture_output=True, text=True, check=True,
+        )
+        return result.stdout.strip()
+
+    iso = _git_date(["--", CV_CONTENT_FILE]) or _git_date([])
+    return datetime.fromisoformat(iso)
 
 
 def make_google_creds():
@@ -86,44 +96,6 @@ def make_google_creds():
         client_secret=os.environ["GDRIVE_CLIENT_SECRET"],
         scopes=[DRIVE_SCOPE, GMAIL_SCOPE],
     )
-
-
-def yaml_escape(s):
-    """Escape a string for safe inclusion inside YAML double quotes."""
-    if s is None:
-        return ""
-    return (str(s)
-            .replace("\\", "\\\\")
-            .replace('"', '\\"')
-            .replace("\n", " ")
-            .strip())
-
-
-def section_hint(text):
-    """Best-guess mapping of an item to a cv_content.yaml section."""
-    t = (text or "").lower()
-    if any(k in t for k in ("publication", "published", "journal",
-                            "doi", "isbn", "paper accepted", "book chapter")):
-        return "publications.journal_articles"
-    if any(k in t for k in ("book review",)):
-        return "publications.book_reviews"
-    if any(k in t for k in ("proceedings", "conference paper")):
-        return "publications.conference_proceedings"
-    if any(k in t for k in ("invited talk", "keynote", "invited to speak", "lecture")):
-        return "invited_talks"
-    if any(k in t for k in ("conference", "presented at", "panel", "presentation")):
-        return "conference_presentations"
-    if any(k in t for k in ("grant", "fellowship", "award", "prize", "funding")):
-        return "fellowships"
-    if any(k in t for k in ("course", "syllabus", "teaching", "lecturer", "instructor")):
-        return "graduate_teaching OR undergraduate_teaching"
-    if any(k in t for k in ("exhibit", "show", "workshop", "performance", "screening")):
-        return "art_shows"
-    if any(k in t for k in ("service", "committee", "review for", "editor", "reviewer")):
-        return "service"
-    if any(k in t for k in ("advisee", "dissertation", "thesis committee")):
-        return "student_advising"
-    return "(unclear — review and assign)"
 
 
 # ── Gmail scanner ───────────────────────────────────────────────────────
@@ -187,26 +159,13 @@ def notion_headers():
 
 
 def find_notion_projects_db():
-    if db_id := os.environ.get("NOTION_PROJECTS_DB_ID"):
-        return db_id
-    r = requests.post(
-        "https://api.notion.com/v1/search",
-        headers=notion_headers(),
-        json={
-            "query": "Projects",
-            "filter": {"value": "database", "property": "object"},
-        },
-        timeout=30,
-    )
-    r.raise_for_status()
-    for db in r.json().get("results", []):
-        title = "".join(t.get("plain_text", "") for t in db.get("title", []))
-        if title.strip().lower() == "projects":
-            return db["id"]
-    raise RuntimeError(
-        "No Notion database titled 'Projects' is shared with this integration. "
-        "Either share one with the integration, or set NOTION_PROJECTS_DB_ID in .env."
-    )
+    """Resolve the Initiatives database id. An explicit NOTION_PROJECTS_DB_ID in
+    .env wins (useful as an override); otherwise fall back to the committed
+    default so the scan works on a fresh checkout with no local config. Resolving
+    by id rather than by title is deliberate: the database's own title is blank
+    under Notion's data-source model (the name lives on the data source), so a
+    title search is unreliable."""
+    return os.environ.get("NOTION_PROJECTS_DB_ID") or NOTION_INITIATIVES_DB_ID
 
 
 def _page_title(page):
@@ -284,110 +243,6 @@ def scan_notion(cutoff):
     return items
 
 
-# ── Obsidian scanner ────────────────────────────────────────────────────
-def scan_obsidian(cutoff):
-    root = Path(OBSIDIAN_PATH)
-    if not root.exists():
-        return []
-    cutoff_ts = cutoff.timestamp()
-    items = []
-    for md in root.rglob("*.md"):
-        try:
-            mtime_ts = md.stat().st_mtime
-        except OSError:
-            continue
-        if mtime_ts <= cutoff_ts:
-            continue
-        try:
-            preview = md.read_text(encoding="utf-8", errors="replace")[:200]
-        except OSError:
-            preview = ""
-        items.append({
-            "filename": md.name,
-            "path": str(md.relative_to(root)),
-            "modified": datetime.fromtimestamp(mtime_ts, tz=timezone.utc).isoformat(),
-            "preview": preview.replace("\n", " ").strip(),
-        })
-    return items
-
-
-# ── Markdown formatters ─────────────────────────────────────────────────
-def _fmt_yaml_stub(content):
-    """Returns a YAML stub appropriate for most CV sections."""
-    return (
-        '- year: "' + str(date.today().year) + '"\n'
-        f'  content: "{yaml_escape(content)}"'
-    )
-
-
-def fmt_gmail(items):
-    if not items:
-        return "_No new messages since cutoff._\n"
-    parts = []
-    for it in items:
-        section = section_hint(f"{it['subject']} {it['snippet']}")
-        parts.append(f"`# → {section}`\n")
-        parts.append("```yaml\n" + _fmt_yaml_stub(it["subject"]) + "\n```")
-        parts.append(
-            f"<sub>**From:** {yaml_escape(it['from'])} · "
-            f"**Date:** {yaml_escape(it['date'])}<br>"
-            f"{yaml_escape(it['snippet'])[:200]}</sub>\n"
-        )
-    return "\n".join(parts)
-
-
-def fmt_drive(items):
-    if not items:
-        return "_No files modified since cutoff._\n"
-    parts = []
-    for it in items:
-        text = f"{it.get('name','')} {it.get('description') or ''}"
-        section = section_hint(text)
-        parts.append(f"`# → {section}`\n")
-        parts.append("```yaml\n" + _fmt_yaml_stub(it.get("name", "")) + "\n```")
-        link = it.get("webViewLink") or ""
-        parts.append(
-            f"<sub>modified {it.get('modifiedTime','')} · "
-            f"{it.get('mimeType','')}"
-            + (f" · [open]({link})" if link else "")
-            + "</sub>\n"
-        )
-    return "\n".join(parts)
-
-
-def fmt_notion(items):
-    if not items:
-        return "_No academic projects updated since cutoff._\n"
-    parts = []
-    for it in items:
-        section = section_hint(it["name"])
-        parts.append(f"`# → {section}`\n")
-        parts.append("```yaml\n" + _fmt_yaml_stub(it["name"]) + "\n```")
-        parts.append(
-            f"<sub>status: {yaml_escape(it['status'])} · "
-            f"last edited {it['last_edited']}"
-            + (f" · [open]({it['url']})" if it.get("url") else "")
-            + "</sub>\n"
-        )
-    return "\n".join(parts)
-
-
-def fmt_obsidian(items):
-    if not items:
-        return "_No academic notes modified since cutoff._\n"
-    parts = []
-    for it in items:
-        section = section_hint(it["filename"] + " " + it["preview"])
-        title = it["filename"].removesuffix(".md")
-        parts.append(f"`# → {section}`\n")
-        parts.append("```yaml\n" + _fmt_yaml_stub(title) + "\n```")
-        parts.append(
-            f"<sub>{it['path']} · modified {it['modified']}<br>"
-            f"{yaml_escape(it['preview'])[:200]}</sub>\n"
-        )
-    return "\n".join(parts)
-
-
 # ── Drive read/write CV_Suggestions.md ──────────────────────────────────
 def fetch_existing_suggestions(creds):
     service = build("drive", "v3", credentials=creds, cache_discovery=False)
@@ -433,18 +288,24 @@ def main():
     try:
         cutoff = get_cutoff_date()
     except subprocess.CalledProcessError as e:
-        sys.exit(f"`gh api` failed (is gh installed and authenticated?): {e.stderr}")
+        sys.exit(f"git log failed (is this a git checkout with history?): {e.stderr}")
     except Exception as e:
         sys.exit(f"Failed to determine cutoff date: {e}")
-    print(f"  Cutoff: {cutoff.isoformat()}  (last commit on {GH_REPO}/{GH_BRANCH})")
+    print(f"  Cutoff: {cutoff.isoformat()}  (last {CV_CONTENT_FILE} commit, local git)")
 
     creds = make_google_creds()
 
-    gmail_items = drive_items = notion_items = obsidian_items = []
+    # Collect raw candidates from every source, tagging each with its origin so
+    # the filter can report it. The filter (cv_filter) does all classification
+    # and formatting; this script only gathers, filters, and prepends.
+    candidates = []
 
     print("  Scanning Gmail…")
     try:
         gmail_items = scan_gmail(creds, cutoff)
+        for it in gmail_items:
+            it["source"] = "gmail"
+        candidates += gmail_items
         print(f"    {len(gmail_items)} message(s)")
     except Exception as e:
         msg = str(e)
@@ -458,32 +319,39 @@ def main():
     try:
         drive_items = (scan_drive_folder(creds, ACADEMIC_FOLDER_ID, cutoff)
                        + scan_drive_folder(creds, CV_FOLDER_ID, cutoff))
+        for it in drive_items:
+            it["source"] = "drive"
+        candidates += drive_items
         print(f"    {len(drive_items)} file(s)")
     except Exception as e:
         print(f"    Drive scan FAILED: {e}", file=sys.stderr)
 
-    print("  Scanning Notion (Projects DB, label=Academic)…")
+    print("  Scanning Notion (Initiatives DB, Area=Academic)…")
     try:
         notion_items = scan_notion(cutoff)
+        for it in notion_items:
+            it["source"] = "notion"
+        candidates += notion_items
         print(f"    {len(notion_items)} project(s)")
     except Exception as e:
         print(f"    Notion scan FAILED: {e}", file=sys.stderr)
 
-    print("  Scanning Obsidian (academic notes)…")
-    try:
-        obsidian_items = scan_obsidian(cutoff)
-        print(f"    {len(obsidian_items)} note(s)")
-    except Exception as e:
-        print(f"    Obsidian scan FAILED: {e}", file=sys.stderr)
+    if not candidates:
+        print("  No new activity since cutoff — nothing to suggest. Done.")
+        return
 
+    print("  Filtering candidates (cv_filter)…")
+    review_path = SCRIPT_DIR / "cv_suggestions_review.md"
+    try:
+        cv_filter.run(candidates, str(SCRIPT_DIR / CV_CONTENT_FILE),
+                      out_path=str(review_path))
+        print("    Filtered.")
+    except Exception as e:
+        sys.exit(f"Filtering FAILED (cv_filter): {e}")
+
+    review = review_path.read_text(encoding="utf-8")
     today = date.today().isoformat()
-    new_block = (
-        f"---\n## Suggestions — {today}\n\n"
-        f"### Gmail\n\n{fmt_gmail(gmail_items)}\n"
-        f"### Drive\n\n{fmt_drive(drive_items)}\n"
-        f"### Notion\n\n{fmt_notion(notion_items)}\n"
-        f"### Obsidian\n\n{fmt_obsidian(obsidian_items)}\n"
-    )
+    new_block = f"---\n## Suggestions — {today}\n\n{review}\n"
 
     print("  Fetching existing CV_Suggestions.md from Drive…")
     try:
