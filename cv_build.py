@@ -252,7 +252,7 @@ body = f"""
 <p class="cv-section-head">Conference Presentations</p>
 {''.join(item(e['content'], e['year']) for e in cv['conference_presentations'])}
 
-<p class="cv-section-head">Art Shows, Workshops &amp; Performances</p>
+<p class="cv-section-head">Select Art Shows, Workshops &amp; Performances</p>
 {''.join(item(e['content'], e['year']) for e in cv['art_shows'])}
 
 <p class="cv-section-head">Relevant Professional Experience</p>
