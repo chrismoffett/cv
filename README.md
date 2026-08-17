@@ -18,37 +18,27 @@ Academic CV built from a YAML content file using Python + WeasyPrint.
 
 1. Edit `cv_content.yaml` in Google Drive (`Areas > Academic > CV`)
 2. Trigger the build using the URL in the Drive README
-3. GitHub Actions runs automatically (~90 seconds):
-   - Downloads the updated YAML from Drive
+3. GitHub Actions runs automatically (~60–90 seconds):
+   - Resolves `cv_content.yaml` by name inside the Drive CV folder and downloads it
    - Builds `CV_Moffett.pdf` and `CV_Moffett.html`
    - Commits both to this repo
    - Uploads both back to Drive
 4. GitHub Pages serves the updated HTML at the live URL above
 
-## First-time setup (GitHub Secrets)
+## GitHub Secrets
 
-The workflow requires three secrets in **Settings → Secrets and variables → Actions**:
+The workflow authenticates to Google Drive via OAuth (not a service account) and needs four secrets in **Settings → Secrets and variables → Actions**:
 
-| Secret | Value |
-|--------|-------|
-| `GDRIVE_SERVICE_ACCOUNT_JSON` | Full JSON content of the Google service account key |
-| `GDRIVE_YAML_FILE_ID` | `1CgSBI3au_Xvrw6EECfZLN8fvdwLJ2jVQ` |
-| `GDRIVE_CV_FOLDER_ID` | `1H2lg3z_HiPcSeS-gIlYV5GS24AedQ476` |
+| Secret | What it is |
+|--------|------------|
+| `GDRIVE_REFRESH_TOKEN` | OAuth refresh token for the Drive API |
+| `GDRIVE_CLIENT_ID` | OAuth client ID (Google Cloud Console) |
+| `GDRIVE_CLIENT_SECRET` | OAuth client secret |
+| `GDRIVE_CV_FOLDER_ID` | `1H2lg3z_HiPcSeS-gIlYV5GS24AedQ476` — the CV folder in Drive. The build resolves `cv_content.yaml`, `CV_Moffett.pdf`, etc. by name inside this folder, so nothing is pinned to a specific file ID. |
 
-### Creating the Google service account
+If the refresh token expires (`invalid_grant`), see `SETUP.md` for regenerating it with `get_refresh_token.py`.
 
-1. Go to [console.cloud.google.com](https://console.cloud.google.com)
-2. Create a new project (or use an existing one)
-3. Enable the **Google Drive API** for that project
-4. Go to **IAM & Admin → Service Accounts → Create Service Account**
-5. Name it (e.g. `cv-builder`), click Create
-6. Skip role assignment, click Done
-7. Click the service account → **Keys → Add Key → Create new key → JSON**
-8. Download the JSON file — this is `GDRIVE_SERVICE_ACCOUNT_JSON`
-9. Copy the `client_email` from the JSON (looks like `cv-builder@...iam.gserviceaccount.com`)
-10. In Google Drive, **share the CV folder** with that email address (Editor access)
-
-Once secrets are set, trigger a build to verify everything works.
+> **Note:** a `GDRIVE_YAML_FILE_ID` secret existed previously, pinning `cv_content.yaml` to one specific Drive file ID. That approach broke every time the file was recreated in Drive, so the workflow was changed (2026-08-17) to resolve the file by name instead. The old secret is no longer read by anything and can be deleted.
 
 ## Local build (optional)
 
