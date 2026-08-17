@@ -40,7 +40,7 @@ jobs:
           GDRIVE_REFRESH_TOKEN: ${{ secrets.GDRIVE_REFRESH_TOKEN }}
           GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
           GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
-          GDRIVE_YAML_FILE_ID: ${{ secrets.GDRIVE_YAML_FILE_ID }}
+          GDRIVE_CV_FOLDER_ID: ${{ secrets.GDRIVE_CV_FOLDER_ID }}
         run: |
           pip install google-auth google-auth-oauthlib google-api-python-client
           python3 - << 'PYEOF'
@@ -59,7 +59,16 @@ jobs:
           )
           service = build('drive', 'v3', credentials=creds)
 
-          file_id = os.environ['GDRIVE_YAML_FILE_ID']
+          folder_id = os.environ['GDRIVE_CV_FOLDER_ID']
+          results = service.files().list(
+              q=f"name='cv_content.yaml' and '{folder_id}' in parents and trashed=false",
+              fields='files(id, name)').execute()
+          files = results.get('files', [])
+          if not files:
+              raise SystemExit("cv_content.yaml not found in Drive folder — check GDRIVE_CV_FOLDER_ID")
+          file_id = files[0]['id']
+          print(f"Resolved cv_content.yaml to file ID {file_id}")
+
           request = service.files().get_media(fileId=file_id)
           buf = io.BytesIO()
           downloader = MediaIoBaseDownload(buf, request)
