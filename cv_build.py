@@ -160,7 +160,8 @@ body {
 }
 .cv-item em { font-style: italic; }
 .cv-item-year { font-size: 9.5pt; }
-.cv-list-item { margin-bottom: 6pt; line-height: 1.42; }
+.cv-list-item { margin-bottom: 6pt; line-height: 1.42; page-break-inside: avoid; }
+.cv-block { page-break-inside: avoid; }
 .cv-inst { margin-bottom: 14pt; }
 .cv-inst-name { font-weight: 600; line-height: 1.42; margin-bottom: 5pt; page-break-after: avoid; }
 .cv-dept { margin-left: 14pt; margin-top: 7pt; margin-bottom: 0; page-break-inside: avoid; }
@@ -270,11 +271,15 @@ body = f"""
 <p class="cv-advising-head">Thesis Committees</p>
 {''.join(advisee(s['name'], s.get('title')) for s in cv['student_advising']['thesis'])}
 
+<div class="cv-block">
 <p class="cv-section-head">Languages</p>
 {''.join(f'<p class="cv-list-item">{lang}</p>' for lang in cv['languages'])}
+</div>
 
+<div class="cv-block">
 <p class="cv-section-head">Memberships</p>
 {''.join(f'<p class="cv-list-item">{m}</p>' for m in cv['memberships'])}
+</div>
 
 <p class="cv-section-head">References</p>
 {references_html}
