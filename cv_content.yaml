@@ -72,6 +72,11 @@ graduate_teaching:
       - name: "Harry Van Arsdale Jr. Center for Labor Studies"
         courses:
           - "Women's Studies (Spring 2012)"
+  - institution: "City College of New York, Staten Island, NY"
+    departments:
+      - name: "Curriculum and Instruction"
+        courses:
+          - "Material Inquiry in Education (Fall 2026)"        
   - institution: "Pratt Institute, Brooklyn, NY"
     departments:
       - name: "Graduate Program in Art & Design Education"
@@ -353,7 +358,7 @@ student_advising:
       title: "Biopedagogy of Rumination and Regurgitation."
 
 languages:
-  - "Mandarin Chinese, Intermediate"
+  - "Mandarin Chinese, B1"
   - "Ancient Greek, Reading & Translation with Lexicon"
 
 memberships:
