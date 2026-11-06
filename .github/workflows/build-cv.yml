@@ -10,10 +10,19 @@ on:
 
 permissions:
   contents: write
+  issues: write
+
+# One build at a time; a queued run waits instead of racing the commit step.
+concurrency:
+  group: build-cv
+  cancel-in-progress: false
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Pinned image: ubuntu-latest moved to Ubuntu 26 and broke the apt step.
+    # Bump deliberately (and test with Run workflow) before GitHub retires 24.04.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repo
@@ -32,7 +41,7 @@ jobs:
           GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
           GDRIVE_CV_FOLDER_ID: ${{ secrets.GDRIVE_CV_FOLDER_ID }}
         run: |
-          pip install google-auth google-auth-oauthlib google-api-python-client
+          pip install google-auth==2.53.0 google-auth-oauthlib==1.4.0 google-api-python-client==2.196.0
           python3 - << 'PYEOF'
           import os
           from google.oauth2.credentials import Credentials
@@ -78,22 +87,43 @@ jobs:
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "cv_content.yaml unchanged since last build; skipping."
+            # GitHub pauses scheduled workflows after 60 days without repo activity.
+            age=$(( $(date +%s) - $(git log -1 --format=%ct) ))
+            if [ "$age" -gt 3456000 ]; then
+              echo "stale=true" >> "$GITHUB_OUTPUT"
+            fi
           fi
+
+      - name: Keepalive commit (keeps the schedule from being paused)
+        if: steps.chg.outputs.changed == 'false' && steps.chg.outputs.stale == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          date -u +"%Y-%m-%d" > .keepalive
+          git add .keepalive
+          git commit -m "Keepalive [$(date +'%Y-%m-%d')]"
+          git push
 
       - name: Install system dependencies
         if: steps.chg.outputs.changed == 'true'
         run: |
-          sudo apt-get update -q
-          sudo apt-get install -y -q \
-            fonts-noto-cjk-extra \
-            libpango-1.0-0 \
-            libpangocairo-1.0-0 \
-            libcairo2 \
-            libgdk-pixbuf2.0-0
+          for attempt in 1 2 3; do
+            sudo apt-get update -q \
+              && sudo apt-get install -y -q \
+                fonts-noto-cjk-extra \
+                libpango-1.0-0 \
+                libpangocairo-1.0-0 \
+                libcairo2 \
+                libgdk-pixbuf2.0-0 \
+              && exit 0
+            echo "apt attempt $attempt failed; retrying in 15s"
+            sleep 15
+          done
+          exit 1
 
       - name: Install Python dependencies
         if: steps.chg.outputs.changed == 'true'
-        run: pip install weasyprint pyyaml
+        run: pip install weasyprint==70.0 pyyaml==6.0.3
 
       - name: Build PDF
         if: steps.chg.outputs.changed == 'true'
@@ -157,3 +187,24 @@ jobs:
           git add CV_Moffett_public.pdf CV_Moffett.html index.html cv_content.yaml
           git diff --staged --quiet || git commit -m "Build CV [$(date +'%Y-%m-%d')]"
           git push
+
+      - name: Close any open build-failure issue
+        if: success() && steps.chg.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          for n in $(gh issue list --state open --search "CV build failed in:title" --json number --jq '.[].number'); do
+            gh issue close "$n" --comment "Build succeeded in run $GITHUB_RUN_ID."
+          done
+
+      - name: Open an issue if the build failed
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$(gh issue list --state open --search "CV build failed in:title" --json number --jq '.[0].number')" ]; then
+            gh issue create --title "CV build failed" \
+              --body "The scheduled or manual CV build failed. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          fi
