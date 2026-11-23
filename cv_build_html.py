@@ -84,7 +84,7 @@ body {
     letter-spacing: 0.18em; text-transform: uppercase; color: #888; margin: 0 0 18pt;
 }
 .cv-contact {
-    display: flex; justify-content: space-between;
+    display: flex; justify-content: space-between; gap: 12pt;
     font-size: 9.5pt; line-height: 1.55; margin-bottom: 26pt;
 }
 .cv-contact p { margin: 0; }
@@ -130,11 +130,10 @@ body {
 .cv-ref-name { font-weight: 600; }
 .cv-distinction { font-style: italic; display: block; line-height: 1.42; }
 .cv-pdf-button {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 6pt;
-    margin: 0 0 28pt;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4pt;
+    margin-top: 14pt;
 }
 .cv-pdf-button a {
     display: inline-block;
@@ -146,8 +145,13 @@ body {
     border: 0.5pt solid #888;
     padding: 4pt 10pt;
     text-decoration: none;
+    text-align: center;
+    white-space: nowrap;
 }
 .cv-pdf-button a:hover { color: #1a1a1a; border-color: #1a1a1a; }
+@media (max-width: 750px) {
+    .cv-pdf-button a { letter-spacing: 0.1em; padding: 3pt 7pt; }
+}
 @media print { .cv-pdf-button { display: none; } }
 """
 
@@ -195,9 +199,9 @@ body = f"""
     <div class="cv-contact-right">
         <p><a href="mailto:{p['email']}">{p['email']}</a></p>
         <p>{p['phone']}</p>
+        <div class="cv-pdf-button"><a href="https://scholar.google.com/citations?user=Jp4s57oAAAAJ">Google Scholar</a><a href="https://tc.academia.edu/CMoffett">Academia.edu</a><a href="CV_Moffett_public.pdf" download>Download PDF</a></div>
     </div>
 </div>
-<div class="cv-pdf-button"><a href="https://scholar.google.com/citations?user=Jp4s57oAAAAJ">Google Scholar</a><a href="https://tc.academia.edu/CMoffett">Academia.edu</a><a href="CV_Moffett_public.pdf" download>Download PDF</a></div>
 
 <p class="cv-section-head">Education</p>
 {''.join(entry(e['year'], e['entry']) for e in cv['education'])}
