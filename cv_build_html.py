@@ -130,9 +130,11 @@ body {
 .cv-ref-name { font-weight: 600; }
 .cv-distinction { font-style: italic; display: block; line-height: 1.42; }
 .cv-pdf-button {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6pt;
     margin: 0 0 28pt;
-    text-align: right;
 }
 .cv-pdf-button a {
     display: inline-block;
@@ -195,7 +197,7 @@ body = f"""
         <p>{p['phone']}</p>
     </div>
 </div>
-<div class="cv-pdf-button"><a href="CV_Moffett_public.pdf" download>Download PDF</a></div>
+<div class="cv-pdf-button"><a href="https://scholar.google.com/citations?user=Jp4s57oAAAAJ">Google Scholar</a><a href="https://tc.academia.edu/CMoffett">Academia.edu</a><a href="CV_Moffett_public.pdf" download>Download PDF</a></div>
 
 <p class="cv-section-head">Education</p>
 {''.join(entry(e['year'], e['entry']) for e in cv['education'])}
