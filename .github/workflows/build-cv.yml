@@ -108,8 +108,8 @@ jobs:
         if: steps.chg.outputs.changed == 'true'
         run: |
           for attempt in 1 2 3; do
-            sudo apt-get update -q \
-              && sudo apt-get install -y -q \
+            sudo apt-get -o Acquire::http::Timeout=60 update -q \
+              && sudo apt-get -o Acquire::http::Timeout=60 install -y -q \
                 fonts-noto-cjk-extra \
                 libpango-1.0-0 \
                 libpangocairo-1.0-0 \
@@ -199,7 +199,7 @@ jobs:
           done
 
       - name: Open an issue if the build failed
-        if: failure()
+        if: failure() || cancelled()
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
