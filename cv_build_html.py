@@ -199,7 +199,7 @@ body = f"""
     <div class="cv-contact-right">
         <p><a href="mailto:{p['email']}">{p['email']}</a></p>
         <p>{p['phone']}</p>
-        <div class="cv-pdf-button"><a href="https://orcid.org/0000-0002-6440-7702">ORCID</a><a href="https://scholar.google.com/citations?user=Jp4s57oAAAAJ">Google Scholar</a><a href="https://tc.academia.edu/CMoffett">Academia.edu</a><a href="CV_Moffett_public.pdf" download>Download PDF</a></div>
+        <div class="cv-pdf-button"><a href="https://orcid.org/0000-0002-6440-7702" target="_blank" rel="noopener noreferrer">ORCID</a><a href="https://scholar.google.com/citations?user=Jp4s57oAAAAJ" target="_blank" rel="noopener noreferrer">Google Scholar</a><a href="https://tc.academia.edu/CMoffett" target="_blank" rel="noopener noreferrer">Academia.edu</a><a href="CV_Moffett_public.pdf" download>Download PDF</a></div>
     </div>
 </div>
 
